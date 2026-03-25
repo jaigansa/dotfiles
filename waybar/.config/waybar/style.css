@@ -1,0 +1,125 @@
+@import "theme.css";
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 14px;
+    min-height: 0;
+}
+
+#waybar {
+    background-color: @main-bg;
+    border: none;
+    color: @text;
+    margin: 5px 10px;
+}
+
+/* Common module spacing */
+#workspaces,
+#window,
+#clock,
+#pulseaudio,
+#pulseaudio.microphone,
+#tray,
+#bluetooth,
+#network,
+#custom-notification,
+#custom-distro,
+#custom-power,
+#custom-gpu-icon,
+#custom-cpu-icon,
+#custom-memory-icon,
+#network-icon {
+    padding: 0 10px;
+    margin: 4px 0;
+}
+
+/* Drawer Data Styling - No background, just floating text */
+#custom-gpu-data,
+#cpu,
+#temperature,
+#memory,
+#network.data {
+    padding: 0 5px;
+    margin: 4px 0;
+    font-weight: bold;
+    background: transparent;
+}
+
+/* Distro Icon */
+#custom-distro {
+    color: @accent;
+    font-size: 20px;
+}
+
+/* Workspaces */
+#workspaces button {
+    padding: 0 8px;
+    color: alpha(@text, 0.4);
+    font-size: 10px;
+    background: transparent;
+}
+
+#workspaces button.active {
+    color: @accent;
+    font-size: 14px;
+}
+
+/* Window Title */
+#window {
+    font-weight: bold;
+    color: @accent;
+}
+
+/* Colors for Group Icons */
+#custom-gpu-icon { color: @teal; }
+#custom-cpu-icon { color: @blue; }
+#custom-memory-icon { color: @mauve; }
+#network.icon { color: @sky; }
+#bluetooth { color: @sapphire; }
+
+/* General module colors */
+#clock { color: @peach; font-weight: bold; }
+#pulseaudio { color: @lavender; }
+#pulseaudio.microphone { color: @maroon; }
+#custom-notification { color: @yellow; }
+#custom-power { color: @red; }
+
+/* Transitions */
+#workspaces button,
+#clock,
+#pulseaudio,
+#pulseaudio.microphone,
+#bluetooth,
+#network.icon,
+#custom-notification,
+#custom-power,
+#custom-gpu-icon,
+#custom-cpu-icon,
+#custom-memory-icon {
+    transition: all 0.3s ease;
+}
+
+/* Hover effects - No background, just color intensity */
+#workspaces button:hover,
+#clock:hover,
+#pulseaudio:hover,
+#pulseaudio.microphone:hover,
+#bluetooth:hover,
+#network.icon:hover,
+#custom-notification:hover,
+#tray:hover,
+#custom-power:hover {
+    color: @accent;
+}
+
+/* Specific tooltip styling */
+tooltip {
+    background: @base;
+    border: 1px solid @accent;
+    border-radius: 10px;
+}
+tooltip label {
+    color: @text;
+}

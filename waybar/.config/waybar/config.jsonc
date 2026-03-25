@@ -1,0 +1,234 @@
+{
+    "layer": "top",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 40,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "spacing": 0,
+
+    "modules-left": [
+        "custom/distro",
+        "hyprland/workspaces"
+    ],
+    "modules-center": [
+        "hyprland/window"
+    ],
+    "modules-right": [
+        "group/gpu",
+        "group/cpu",
+        "group/memory",
+        "group/network",
+        "bluetooth",
+        "group/audio",
+        "clock",
+        "tray",
+        "custom/notification",
+        "custom/power"
+    ],
+
+    /* --- Audio Group --- */
+    "group/audio": {
+        "orientation": "horizontal",
+        "modules": [
+            "pulseaudio",
+            "pulseaudio#microphone"
+        ]
+    },
+
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-muted": "󰝟",
+        "format-icons": {
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && hyprctl notify 2 1500 \"rgb(b4befe)\" \"Volume: $(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2*100)}')%\"",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && hyprctl notify 2 1500 \"rgb(b4befe)\" \"Volume: $(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2*100)}')%\"",
+        "tooltip-format": "Volume: {volume}%"
+    },
+
+    "pulseaudio#microphone": {
+        "format": "{format_source}",
+        "format-source": "󰍬",
+        "format-source-muted": "󰍭",
+        "on-click": "pavucontrol",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+ && hyprctl notify 2 1500 \"rgb(eba0ac)\" \"Mic: $(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | awk '{print int($2*100)}')%\"",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%- && hyprctl notify 2 1500 \"rgb(eba0ac)\" \"Mic: $(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | awk '{print int($2*100)}')%\"",
+        "tooltip-format": "Mic: {volume}%"
+    },
+
+    /* --- Network Group --- */
+    "group/network": {
+        "orientation": "horizontal",
+        "modules": [
+            "network#icon",
+            "network#data"
+        ],
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-network",
+            "transition-left-to-right": false
+        }
+    },
+    "network#icon": {
+        "format-wifi": "󰤨",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰤯",
+        "format-disabled": "󰤮",
+        "tooltip": false,
+        "on-click": "kitty -e ~/.config/waybar/scripts/network"
+    },
+    "network#data": {
+        "format-wifi": "{essid}",
+        "format-ethernet": "Ethernet",
+        "format-disconnected": "Disconnected",
+        "max-length": 20,
+        "tooltip-format": "{ipaddr}/{cidr} | {signalStrength}%"
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-disabled": "󰂲",
+        "format-connected": "󰂱",
+        "on-click": "kitty -e ~/.config/waybar/scripts/bluetooth",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}"
+    },
+
+    /* --- GPU Group --- */
+    "group/gpu": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/gpu-icon",
+            "custom/gpu-data"
+        ],
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-gpu",
+            "transition-left-to-right": false
+        }
+    },
+    "custom/gpu-icon": {
+        "format": "󰢮",
+        "tooltip": false,
+        "on-click": "hyprctl notify 1 2000 \"rgb(94e2d5)\" \"GPU Usage: $(cat /sys/class/drm/card1/device/gpu_busy_percent)% | Temp: $(($(cat /sys/class/hwmon/hwmon1/temp2_input) / 1000))°C\""
+    },
+    "custom/gpu-data": {
+        "exec": "echo \"$(cat /sys/class/drm/card1/device/gpu_busy_percent)% $(($(cat /sys/class/hwmon/hwmon1/temp2_input) / 1000))°C\"",
+        "interval": 2,
+        "tooltip": false
+    },
+
+    /* --- CPU Group --- */
+    "group/cpu": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/cpu-icon",
+            "cpu",
+            "temperature#cpu"
+        ],
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-cpu",
+            "transition-left-to-right": false
+        }
+    },
+    "custom/cpu-icon": {
+        "format": "󰍛",
+        "tooltip": false,
+        "on-click": "hyprctl notify 1 2000 \"rgb(89b4fa)\" \"CPU Usage: $(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage \"%\"}')\""
+    },
+    "cpu": {
+        "interval": 2,
+        "format": "{usage}%",
+        "tooltip": true
+    },
+    "temperature#cpu": {
+        "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
+        "critical-threshold": 80,
+        "format": "{temperatureC}°C",
+        "tooltip": false
+    },
+
+    /* --- Memory Group --- */
+    "group/memory": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/memory-icon",
+            "memory"
+        ],
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-memory",
+            "transition-left-to-right": false
+        }
+    },
+    "custom/memory-icon": {
+        "format": "󰘚",
+        "tooltip": false,
+        "on-click": "hyprctl notify 1 2000 \"rgb(cba6f7)\" \"Memory: $(free -h | awk '/Mem:/ {print $3 \" / \" $2}')\""
+    },
+    "memory": {
+        "interval": 5,
+        "format": "{percentage}%",
+        "tooltip-format": "Memory Used: {used:0.1f}GiB / {total:0.1f}GiB"
+    },
+
+    /* --- Other Modules --- */
+    "custom/distro": {
+        "format": "󰣇",
+        "tooltip": false,
+        "on-click": "hyprctl notify 1 3000 \"rgb(cba6f7)\" \"Hyprland Environment | $(uname -r)\""
+    },
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "active": "",
+            "default": "",
+            "urgent": ""
+        },
+        "on-scroll-up": "hyprctl dispatch workspace +1",
+        "on-scroll-down": "hyprctl dispatch workspace -1"
+    },
+
+    "hyprland/window": {
+        "format": "{}",
+        "rewrite": {
+            "": "Desktop",
+            "kitty": "Terminal"
+        },
+        "max-length": 50
+    },
+
+    "clock": {
+        "format": "󰥔 {:%H:%M}",
+        "format-alt": "󰸗 {:%d/%m}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>"
+    },
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 10
+    },
+
+    "custom/notification": {
+        "tooltip": false,
+        "format": "󰂚",
+        "on-click": "pgrep swaync || swaync & sleep 0.1 && swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw"
+    },
+
+    "custom/power": {
+        "format": "󰐥",
+        "on-click": "hyprctl notify 3 3000 \"rgb(f38ba8)\" \"Logout Triggered\" && sleep 1 && hyprctl dispatch exit",
+        "on-click-right": "hyprctl notify 3 2000 \"rgb(f38ba8)\" \"Use Left-Click to Logout\"",
+        "tooltip": false
+    }
+}
